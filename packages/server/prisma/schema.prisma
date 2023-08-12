@@ -1,0 +1,87 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum QuestionType {
+  OPEN
+  MULTIPLE_CHOICE
+  SORT
+}
+
+model Question {
+  id                     Int                     @id @default(autoincrement())
+  content                String
+  hint                   String?
+  difficulty             Int
+  createdAt              DateTime                @default(now())
+  updatedAt              DateTime                @updatedAt
+  type                   QuestionType
+  OpenQuestion           OpenQuestion?
+  MultipleChoiceQuestion MultipleChoiceQuestion?
+  SortQuestion           SortQuestion?
+  Subject                Subject?                @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  subjectId              Int?
+}
+
+model OpenQuestion {
+  id         String   @id @default(uuid())
+  answer     String
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  questionId Int      @unique
+}
+
+model MultipleChoiceQuestion {
+  id         String   @id @default(uuid())
+  options    Option[]
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  questionId Int      @unique
+}
+
+model SortQuestion {
+  id         String     @id @default(uuid())
+  items      SortItem[]
+  question   Question   @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  questionId Int        @unique
+}
+
+model Option {
+  id                       String                  @id @default(uuid())
+  content                  String
+  MultipleChoiceQuestion   MultipleChoiceQuestion? @relation(fields: [multipleChoiceQuestionId], references: [id])
+  multipleChoiceQuestionId String?
+  isCorrect                Boolean                 @default(false)
+}
+
+model SortItem {
+  id             String        @id @default(uuid())
+  content        String
+  sort           Int
+  SortQuestion   SortQuestion? @relation(fields: [sortQuestionId], references: [id])
+  sortQuestionId String?
+}
+
+model Subject {
+  id        Int        @id @default(autoincrement())
+  name      String
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  questions Question[]
+  User      User?      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int?
+}
+
+model User {
+  id       Int       @id @default(autoincrement())
+  email    String    @unique
+  name     String?
+  password String
+  subjects Subject[]
+}

@@ -1,0 +1,8 @@
+{
+  "workbench.colorCustomizations": {
+    "activityBar.background": "#5B1020",
+    "titleBar.activeBackground": "#7F162C",
+    "titleBar.activeForeground": "#FEFBFC"
+  },
+  "cSpell.words": ["commitlint"]
+}
