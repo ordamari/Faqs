@@ -4,5 +4,5 @@
     "titleBar.activeBackground": "#7F162C",
     "titleBar.activeForeground": "#FEFBFC"
   },
-  "cSpell.words": ["commitlint"]
+  "cSpell.words": ["commitlint", "dtos"]
 }

@@ -17,7 +17,7 @@ enum QuestionType {
 }
 
 model Question {
-  id                     Int                     @id @default(autoincrement())
+  id                     String                     @id @default(uuid())
   content                String
   hint                   String?
   difficulty             Int
@@ -28,28 +28,28 @@ model Question {
   MultipleChoiceQuestion MultipleChoiceQuestion?
   SortQuestion           SortQuestion?
   Subject                Subject?                @relation(fields: [subjectId], references: [id], onDelete: Cascade)
-  subjectId              Int?
+  subjectId              String?
 }
 
 model OpenQuestion {
   id         String   @id @default(uuid())
   answer     String
   question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
-  questionId Int      @unique
+  questionId String      @unique
 }
 
 model MultipleChoiceQuestion {
   id         String   @id @default(uuid())
   options    Option[]
   question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
-  questionId Int      @unique
+  questionId String      @unique
 }
 
 model SortQuestion {
   id         String     @id @default(uuid())
   items      SortItem[]
   question   Question   @relation(fields: [questionId], references: [id], onDelete: Cascade)
-  questionId Int        @unique
+  questionId String        @unique
 }
 
 model Option {
@@ -69,17 +69,17 @@ model SortItem {
 }
 
 model Subject {
-  id        Int        @id @default(autoincrement())
+  id        String        @id @default(uuid())
   name      String
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
   questions Question[]
   User      User?      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    Int?
+  userId    String?
 }
 
 model User {
-  id       Int       @id @default(autoincrement())
+  id       String       @id @default(uuid())
   email    String    @unique
   name     String?
   password String
