@@ -1,6 +1,4 @@
 import { OpenQuestion, QuestionType } from '@prisma/client'
-import { MultipleChoiceQuestionWithOptions } from '../types/multiple-choice-question-with-options.type'
-import { SortQuestionWithItems } from '../types/sort-question-with-items.type'
 
 export class CreateQuestionDto {
   readonly content: string
@@ -10,6 +8,16 @@ export class CreateQuestionDto {
   readonly openQuestion?: {
     readonly answer: OpenQuestion['answer']
   }
-  readonly multipleChoiceQuestion?: MultipleChoiceQuestionWithOptions
-  readonly sortQuestion?: SortQuestionWithItems
+  readonly multipleChoiceQuestion?: {
+    readonly options: {
+      readonly content: string
+      readonly isCorrect: boolean
+    }[]
+  }
+  readonly sortQuestion?: {
+    readonly items: {
+      readonly content: string
+      readonly sort: number
+    }[]
+  }
 }

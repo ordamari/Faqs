@@ -1,8 +1,8 @@
 import { HttpException, Inject, Injectable } from '@nestjs/common'
-import { OpenQuestion } from '@prisma/client'
 import { PrismaService } from 'src/common/services/prisma/prisma.service'
 import { CreateQuestionDto } from 'src/questions/dtos/create-question.dto'
 import { UpdateQuestionDto } from 'src/questions/dtos/update-question.dto'
+import { AllQuestionTypes } from 'src/questions/types/all-questionTypes.type'
 import { MultipleChoiceQuestionWithOptions } from 'src/questions/types/multiple-choice-question-with-options.type'
 import { SortQuestionWithItems } from 'src/questions/types/sort-question-with-items.type'
 
@@ -11,7 +11,7 @@ export class QuestionsService {
   @Inject(PrismaService)
   private readonly prisma!: PrismaService
 
-  async getQuestions() {
+  async getQuestions(): Promise<AllQuestionTypes[]> {
     return this.prisma.question.findMany({
       include: {
         OpenQuestion: true,
@@ -80,7 +80,7 @@ export class QuestionsService {
             400
           )
         return this._createMultipleChoiceQuestion(
-          createQuestionDto.multipleChoiceQuestion,
+          createQuestionDto.multipleChoiceQuestion as MultipleChoiceQuestionWithOptions,
           content,
           difficulty,
           hint
@@ -92,7 +92,7 @@ export class QuestionsService {
             400
           )
         return this._createSortQuestion(
-          createQuestionDto.sortQuestion,
+          createQuestionDto.sortQuestion as SortQuestionWithItems,
           content,
           difficulty,
           hint
@@ -124,7 +124,7 @@ export class QuestionsService {
             400
           )
         return this._updateMultipleChoiceQuestion(
-          updateQuestionDto.multipleChoiceQuestion,
+          updateQuestionDto.multipleChoiceQuestion as MultipleChoiceQuestionWithOptions,
           id,
           content,
           difficulty,
@@ -137,7 +137,7 @@ export class QuestionsService {
             400
           )
         return this._updateSortQuestion(
-          updateQuestionDto.sortQuestion,
+          updateQuestionDto.sortQuestion as SortQuestionWithItems,
           id,
           content,
           difficulty,
