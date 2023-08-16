@@ -29,7 +29,7 @@ export class QuestionsService {
     })
   }
 
-  async getQuestion(id: string) {
+  async getQuestion(id: string): Promise<AllQuestionTypes> {
     return this.prisma.question.findUnique({
       where: {
         id
@@ -50,7 +50,7 @@ export class QuestionsService {
     })
   }
 
-  async deleteQuestion(id: string) {
+  async removeQuestion(id: string) {
     return this.prisma.question.delete({
       where: {
         id

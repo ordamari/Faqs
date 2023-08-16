@@ -32,6 +32,6 @@ export class QuestionsController {
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.questionService.deleteQuestion(id)
+    return this.questionService.removeQuestion(id)
   }
 }

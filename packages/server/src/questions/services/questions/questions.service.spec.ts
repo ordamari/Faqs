@@ -42,7 +42,7 @@ describe('QuestionsService', () => {
       .spyOn(prisma.question, 'findUnique')
       .mockResolvedValue(mockOpenQuestion)
     jest.spyOn(prisma.question, 'delete').mockResolvedValue(mockOpenQuestion)
-    expect(await service.deleteQuestion(questionId)).toEqual(mockOpenQuestion)
+    expect(await service.removeQuestion(questionId)).toEqual(mockOpenQuestion)
   })
 
   it('create a open question', async () => {
