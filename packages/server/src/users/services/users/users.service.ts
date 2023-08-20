@@ -1,5 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common'
 import { PrismaService } from 'src/common/services/prisma/prisma.service'
+import { UserWithSubjects } from 'src/users/types/user-with-subjects.type'
 
 @Injectable()
 export class UsersService {
@@ -39,7 +40,7 @@ export class UsersService {
     })
   }
 
-  async findById(id: string) {
+  async findById(id: string): Promise<UserWithSubjects> {
     return this.prisma.user.findUnique({
       where: {
         id
