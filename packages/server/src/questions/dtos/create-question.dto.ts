@@ -1,7 +1,10 @@
 import { OpenQuestion, QuestionType } from '@prisma/client'
+import { Min, Max } from 'class-validator'
 
 export class CreateQuestionDto {
   readonly content: string
+  @Min(1)
+  @Max(5)
   readonly difficulty: number
   readonly hint?: string
   readonly type: QuestionType
