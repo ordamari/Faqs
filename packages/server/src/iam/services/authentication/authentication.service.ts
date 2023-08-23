@@ -5,13 +5,15 @@ import { JwtService } from '@nestjs/jwt'
 import jwtConfig from 'src/iam/config/jwt.config'
 import { ConfigType } from '@nestjs/config'
 import { RefreshTokenIdsStorage } from 'src/iam/storage/refresh-token-ids/refresh-token-ids.storage'
-import { CookieOptions } from 'express'
+import { CookieOptions, Request, Response } from 'express'
 import { SignUpDto } from 'src/iam/dto/sign-up.dto'
 import { randomUUID } from 'crypto'
 import { User } from '@prisma/client'
 import { ActiveUserData } from 'src/iam/types/active-user-data.type'
 import { TokensData } from 'src/iam/types/tokens-data.type'
 import { SignInDto } from 'src/iam/dto/sign-in.dto'
+import { COOKIES_ACCESS_TOKEN_KEY } from 'src/iam/constants/cookies-access-token-key.constant'
+import { COOKIES_REFRESH_TOKEN_KEY } from 'src/iam/constants/cookies-refresh-token-key.constant'
 
 @Injectable()
 export class AuthenticationService {
@@ -108,6 +110,20 @@ export class AuthenticationService {
         Date.now() + this.jwtConfiguration.refreshTokenTtl * 1000
       )
     } as TokensData
+  }
+
+  setTokensCookie(
+    response: Response,
+    accessToken: string,
+    refreshToken: string
+  ) {
+    response.cookie(COOKIES_ACCESS_TOKEN_KEY, accessToken, this.cookieOptions)
+    response.cookie(COOKIES_REFRESH_TOKEN_KEY, refreshToken, this.cookieOptions)
+  }
+
+  extractTokenFromRequest(request: Request, key = COOKIES_ACCESS_TOKEN_KEY) {
+    const token = request.cookies[key]
+    return token
   }
 
   private async signToken<T>(userId: string, expiresIn: number, payload?: T) {

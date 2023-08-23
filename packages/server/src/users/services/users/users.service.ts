@@ -16,11 +16,18 @@ export class UsersService {
     })
   }
 
-  async createWithGoogle(email: string, googleId: string) {
+  async createWithGoogle(
+    email: string,
+    googleId: string,
+    firstName?: string,
+    lastName?: string
+  ) {
     return this.prisma.user.create({
       data: {
         email,
-        googleId
+        googleId,
+        firstName: firstName || null,
+        lastName: lastName || null
       }
     })
   }

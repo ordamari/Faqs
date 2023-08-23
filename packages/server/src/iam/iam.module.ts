@@ -12,9 +12,14 @@ import { UsersService } from 'src/users/services/users/users.service'
 import { RedisService } from 'src/redis/services/redis/redis.service'
 import { APP_GUARD } from '@nestjs/core'
 import { AuthenticationGuard } from './guards/authentication/authentication.guard'
+import { JwtModule } from '@nestjs/jwt'
+import { AuthenticationController } from './controllers/authentication/authentication.controller'
+import { GoogleAuthenticationService } from './services/google-authentication/google-authentication.service'
+import { GoogleAuthenticationController } from './controllers/google-authentication/google-authentication.controller'
 
 @Module({
   imports: [
+    JwtModule.registerAsync(jwtConfig.asProvider()),
     ConfigModule.forFeature(jwtConfig),
     ConfigModule.forFeature(googleConfig),
     ConfigModule.forFeature(redisConfig)
@@ -28,11 +33,14 @@ import { AuthenticationGuard } from './guards/authentication/authentication.guar
       provide: APP_GUARD,
       useClass: AuthenticationGuard
     },
+    AuthenticationController,
     AccessTokenGuard,
     RefreshTokenIdsStorage,
     AuthenticationService,
     UsersService,
-    RedisService
+    RedisService,
+    GoogleAuthenticationService,
+    GoogleAuthenticationController
   ]
 })
 export class IamModule {}
