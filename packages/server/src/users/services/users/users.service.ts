@@ -32,7 +32,7 @@ export class UsersService {
     })
   }
 
-  async findByEmail(email: string) {
+  async findByEmail(email: string): Promise<UserWithSubjects> {
     return this.prisma.user.findUnique({
       where: {
         email

@@ -12,10 +12,11 @@ import { UsersService } from 'src/users/services/users/users.service'
 import { RedisService } from 'src/redis/services/redis/redis.service'
 import { APP_GUARD } from '@nestjs/core'
 import { AuthenticationGuard } from './guards/authentication/authentication.guard'
-import { JwtModule } from '@nestjs/jwt'
+import { JwtModule, JwtService } from '@nestjs/jwt'
 import { AuthenticationController } from './controllers/authentication/authentication.controller'
 import { GoogleAuthenticationService } from './services/google-authentication/google-authentication.service'
 import { GoogleAuthenticationController } from './controllers/google-authentication/google-authentication.controller'
+import { PrismaService } from 'src/common/services/prisma/prisma.service'
 
 @Module({
   imports: [
@@ -40,7 +41,9 @@ import { GoogleAuthenticationController } from './controllers/google-authenticat
     UsersService,
     RedisService,
     GoogleAuthenticationService,
-    GoogleAuthenticationController
+    GoogleAuthenticationController,
+    PrismaService,
+    JwtService
   ]
 })
 export class IamModule {}

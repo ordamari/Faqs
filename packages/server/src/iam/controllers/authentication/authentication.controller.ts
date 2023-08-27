@@ -1,7 +1,5 @@
-import { Body, Controller, Inject, Post, Req, Res } from '@nestjs/common'
-import { ConfigType } from '@nestjs/config'
+import { Body, Controller, Post, Req, Res } from '@nestjs/common'
 import { Request, Response } from 'express'
-import jwtConfig from 'src/iam/config/jwt.config'
 import { COOKIES_REFRESH_TOKEN_KEY } from 'src/iam/constants/cookies-refresh-token-key.constant'
 import { Auth } from 'src/iam/decorators/auth.decorator'
 import { SignInDto } from 'src/iam/dto/sign-in.dto'
@@ -13,14 +11,14 @@ import { ActiveUserData } from 'src/iam/types/active-user-data.type'
 @Auth(AuthType.None)
 @Controller('authentication')
 export class AuthenticationController {
-  private readonly authService!: AuthenticationService
-  @Inject(jwtConfig.KEY)
-  private readonly jwtConfiguration!: ConfigType<typeof jwtConfig>
+  private readonly authenticationService!: AuthenticationService
 
   @Post('sign-in')
   async signIn(@Body() signInDto: SignInDto, @Res() res: Response) {
-    const { tokensData, user } = await this.authService.signIn(signInDto)
-    this.authService.setTokensCookie(
+    const { tokensData, user } = await this.authenticationService.signIn(
+      signInDto
+    )
+    this.authenticationService.setTokensCookie(
       res,
       tokensData.accessToken,
       tokensData.refreshToken
@@ -36,8 +34,10 @@ export class AuthenticationController {
 
   @Post('sign-up')
   async signUp(@Body() signUpDto: SignUpDto, @Res() res: Response) {
-    const { user, tokensData } = await this.authService.signUp(signUpDto)
-    this.authService.setTokensCookie(
+    const { user, tokensData } = await this.authenticationService.signUp(
+      signUpDto
+    )
+    this.authenticationService.setTokensCookie(
       res,
       tokensData.accessToken,
       tokensData.refreshToken
@@ -52,14 +52,14 @@ export class AuthenticationController {
 
   @Post('refresh')
   async refresh(@Req() req: Request, @Res() res: Response) {
-    const oldRefreshToken = this.authService.extractTokenFromRequest(
+    const oldRefreshToken = this.authenticationService.extractTokenFromRequest(
       req,
       COOKIES_REFRESH_TOKEN_KEY
     )
-    const { tokensData, user } = await this.authService.refreshTokens(
+    const { tokensData, user } = await this.authenticationService.refreshTokens(
       oldRefreshToken
     )
-    this.authService.setTokensCookie(
+    this.authenticationService.setTokensCookie(
       res,
       tokensData.accessToken,
       tokensData.refreshToken
